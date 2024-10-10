@@ -22,7 +22,7 @@ on:
       armbian_board:
         description: "Select device board."
         required: false
-        default: "all"
+        default: "emb3531"
         type: choice
         options:
           - all
@@ -232,7 +232,7 @@ on:
           - yourname
 
 env:
-  TZ: America/New_York
+  TZ: Shanghai
   ROOTFS_SCRIPT: compile-kernel/tools/script/armbian_rootfs.sh
 
 jobs:
