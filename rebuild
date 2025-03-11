@@ -85,15 +85,15 @@ kernel_repo="https://github.com/ophub/kernel"
 default_tags="stable"
 kernel_usage=""
 # Set the list of kernels used by default(Selectable version)
-stable_kernel=("6.6.y" "6.1.y")
+stable_kernel=("6.1.y" "6.12.y")
 flippy_kernel=(${stable_kernel[@]})
 dev_kernel=(${stable_kernel[@]})
 beta_kernel=(${stable_kernel[@]})
 rk3588_kernel=("5.10.y")
 rk35xx_kernel=("5.10.y")
 h6_kernel=("6.6.y")
-specific_6xy=("6.6.y" "6.1.y")
-specific_5xy=("5.15.y" "5.10.y" "5.4.y")
+specific_6xy=("6.1.y" "6.6.y" "6.12.y")
+specific_5xy=("5.4.y" "5.10.y" "5.15.y")
 # Set to automatically use the latest kernel
 auto_kernel="true"
 # Initialize the kernel array
@@ -209,6 +209,7 @@ init_var() {
                 stable_kernel=(${2})
                 dev_kernel=(${2})
                 beta_kernel=(${2})
+                specific_kernel=(${2})
                 IFS="${oldIFS}"
                 shift
             else
@@ -320,6 +321,15 @@ check_data() {
             else
                 IFS='_' read -ra value <<<"${value}"
                 value="${value[@]}"
+            fi
+        fi
+
+        # If auto_kernel is false, use the value from -k parameter
+        if [[ "${auto_kernel}" != "true" ]]; then
+            if [[ "${#specific_kernel[@]}" -eq 0 ]]; then
+                error_msg "Plase use the -k parameter to specify the kernel version."
+            else
+                value="${specific_kernel[@]}"
             fi
         fi
 
@@ -615,6 +625,10 @@ extract_armbian() {
     rm -rf usr/lib/modules/*
     # Delete the symbolic link files and relink it later
     rm -rf bin lib sbin var/lock var/run
+    # Delete unused and duplicate scripts
+    rm -f root/install* root/fstab.template
+    rm -f usr/bin/armbian-install usr/sbin/armbian-install
+    rm -f usr/sbin/ddbr usr/bin/ddbr
 }
 
 make_image() {
@@ -906,7 +920,6 @@ refactor_rootfs() {
 
     # Delete related files
     rm -f etc/apt/sources.list.save
-    rm -f usr/sbin/ddbr
     rm -f var/lib/dpkg/info/linux-image*
     rm -rf usr/share/doc/linux-image-*
     rm -rf usr/lib/linux-image-*

@@ -27,7 +27,7 @@ inputs:
   armbian_kernel:
     description: "Set kernel version."
     required: false
-    default: "6.1.y_5.15.y"
+    default: "6.1.y_6.12.y"
   auto_kernel:
     description: "Auto use the latest kernel."
     required: false
@@ -52,7 +52,7 @@ inputs:
   kernel_version:
     description: "Select kernel version"
     required: false
-    default: "6.1.y_5.15.y"
+    default: "6.1.y_6.12.y"
   kernel_auto:
     description: "Auto use the latest kernel"
     required: false
@@ -178,7 +178,7 @@ runs:
             echo -e "PACKAGED_OUTPUTPATH: ${PWD}/${armbian_filepath}"
             echo -e "PACKAGED_OUTPUTDATE: $(date +"%m.%d.%H%M")"
             echo -e "PACKAGED_STATUS: success"
-            echo -e "PACKAGED_OUTPUTPATH files list: \n$(ls -l ${PWD}/${armbian_filepath} 2>/dev/null)"
+            echo -e "PACKAGED_OUTPUTPATH files list: \n$(ls -l ${PWD}/${armbian_filepath}/ 2>/dev/null)"
 
         elif [[ "${build_target}" == "kernel" ]]; then
 
@@ -238,7 +238,7 @@ runs:
             echo -e "PACKAGED_OUTPUTPATH: ${PWD}/${kernel_outpath}"
             echo -e "PACKAGED_OUTPUTDATE: $(date +"%m.%d.%H%M")"
             echo -e "PACKAGED_STATUS: success"
-            echo -e "PACKAGED_OUTPUTPATH files list: \n$(ls -l ${PWD}/${kernel_outpath} 2>/dev/null)"
+            echo -e "PACKAGED_OUTPUTPATH files list: \n$(ls -l ${PWD}/${kernel_outpath}/ 2>/dev/null)"
 
         else
             echo -e "Please select a build target: armbian / kernel"
